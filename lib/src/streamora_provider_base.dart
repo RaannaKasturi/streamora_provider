@@ -1,0 +1,35 @@
+import 'package:streamora_provider/data/video_data.dart';
+import 'package:streamora_provider/providers/auto_embed_1.dart';
+import 'package:streamora_provider/providers/auto_embed_2.dart';
+import 'package:streamora_provider/providers/two_embed.dart';
+
+class StreamoraProvider {
+  final List providers = [
+    AutoEmbed1(),
+    AutoEmbed2(),
+    TwoEmbed(),
+  ];
+
+  Future<List<VideoData>> scrape({
+    required String imdbId,
+    required String mediaType,
+    required String title,
+    required String year,
+    int? season,
+    int? episode,
+  }) async {
+    List<VideoData> videoDataList = [];
+    for (var provider in providers) {
+      List<VideoData> response = await provider.scrape(
+        imdbId: imdbId,
+        mediaType: mediaType,
+        title: title,
+        year: year,
+        season: season,
+        episode: episode,
+      );
+      videoDataList.addAll(response);
+    }
+    return videoDataList;
+  }
+}
