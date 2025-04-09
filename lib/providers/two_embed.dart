@@ -3,11 +3,16 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
 import 'package:streamora_provider/data/video_data.dart';
+import 'package:streamora_provider/utils/is_accessible.dart';
 
 class TwoEmbed {
   final Dio dio = Dio();
   final List<VideoData> videoDataList = [];
   final String baseUrl = "https://uqloads.xyz/e/";
+  final headers = {
+    'Host': 'uqloads.xyz',
+    'Referer': 'https://streamsrcs.2embed.cc/',
+  };
 
   Future<String?> getStreamId(
       String imdbId, String mediaType, String title, String year,
@@ -19,7 +24,7 @@ class TwoEmbed {
       url += imdbId;
     }
 
-    final response = await dio.get(url);
+    final response = await dio.get(url, options: Options(headers: headers));
     if (response.statusCode == 200) {
       final soup = BeautifulSoup(response.data);
       final iframe = soup.find('iframe');
@@ -120,20 +125,20 @@ class TwoEmbed {
         final response = await dio.get(
           url,
           options: Options(
-            headers: {
-              'Host': 'uqloads.xyz',
-              'Referer': 'https://streamsrcs.2embed.cc/',
-            },
+            headers: headers,
           ),
         );
 
         final source = extractVideoSource(response.data);
+        print("\n\n\nVideo Source: 2EMBED");
         if (source != null &&
+            await isAccessible(url: source, headers: headers) &&
             !videoDataList.any((element) => element.videoSourceUrl == source)) {
           videoDataList.add(
             VideoData(
               videoSource: "2EMBED_${videoDataList.length + 1}",
               videoSourceUrl: source,
+              videoSourceHeaders: headers,
             ),
           );
         } else {

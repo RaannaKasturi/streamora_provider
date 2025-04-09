@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:streamora_provider/data/video_data.dart';
+import 'package:streamora_provider/utils/is_accessible.dart';
 
 class Embed {
   final headers = {
@@ -89,11 +90,13 @@ class Embed {
           ),
         );
         final streamURL = response.data['source'];
-        if (streamURL != null) {
+        print("\n\n\nVideo Source: EMBED");
+        if (await isAccessible(url: streamURL, headers: headers)) {
           videoDataList.add(
             VideoData(
               videoSource: "EMBED_${videoDataList.length + 1}",
               videoSourceUrl: streamURL,
+              videoSourceHeaders: headers,
             ),
           );
         } else {
@@ -104,5 +107,29 @@ class Embed {
       print("Exception: $e");
     }
     return videoDataList;
+  }
+}
+
+void main() async {
+  final imdbID = "tt14513804";
+  final tmdbID = "822119";
+  final mediaType = "movie";
+  final title = "Captain America: Brave New World";
+  final year = "2025";
+  final season = null;
+  final episode = null;
+  List<VideoData> videoDataList = [];
+  videoDataList = await Embed().scrape(
+    imdbId: imdbID,
+    tmdbId: tmdbID,
+    mediaType: mediaType,
+    title: title,
+    year: year,
+    season: season,
+    episode: episode,
+  );
+  for (var videoData in videoDataList) {
+    print("\n\n\nVideo Source: ${videoData.videoSource}");
+    print("Video Source URL: ${videoData.videoSourceUrl}");
   }
 }

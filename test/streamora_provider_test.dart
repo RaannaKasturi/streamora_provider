@@ -1,11 +1,7 @@
 import 'package:streamora_provider/data/video_data.dart';
-import 'package:streamora_provider/providers/auto_embed_1.dart';
-import 'package:streamora_provider/providers/auto_embed_2.dart';
 import 'package:streamora_provider/providers/two_embed.dart';
 
 final List providers = [
-  AutoEmbed1(),
-  AutoEmbed2(),
   TwoEmbed(),
 ];
 
@@ -30,7 +26,7 @@ void main() async {
     videoDataList.addAll(response);
   }
   for (var videoData in videoDataList) {
-    print("Video Source: ${videoData.videoSource}");
+    print("\n\n\nVideo Source: ${videoData.videoSource}");
     print("Video Source URL: ${videoData.videoSourceUrl}");
   }
 }

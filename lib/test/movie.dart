@@ -1,14 +1,12 @@
 import 'package:streamora_provider/data/video_data.dart';
-import 'package:streamora_provider/providers/auto_embed_1.dart';
-import 'package:streamora_provider/providers/auto_embed_2.dart';
 import 'package:streamora_provider/providers/embed.dart';
 import 'package:streamora_provider/providers/two_embed.dart';
+import 'package:streamora_provider/providers/vidzee.dart';
 
 final List providers = [
-  AutoEmbed1(),
-  AutoEmbed2(),
   TwoEmbed(),
   Embed(),
+  Vidzee(),
 ];
 
 void main() async {
@@ -37,8 +35,10 @@ void main() async {
       print("Error: $e");
     }
   }
+  print("-----" * 25);
   for (var videoData in videoDataList) {
     print("Video Source: ${videoData.videoSource}");
     print("Video Source URL: ${videoData.videoSourceUrl}");
+    print("Video Source Headers: ${videoData.videoSourceHeaders}");
   }
 }
