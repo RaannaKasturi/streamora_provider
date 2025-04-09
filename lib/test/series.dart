@@ -24,7 +24,6 @@ void main() async {
   List<VideoData> videoDataList = [];
 
   for (var provider in providers) {
-    print("Provider: ${provider.runtimeType}");
     try {
       List<VideoData> response = await provider.scrape(
         imdbId: imdbID,

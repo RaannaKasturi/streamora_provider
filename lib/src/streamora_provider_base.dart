@@ -29,6 +29,7 @@ class StreamoraProvider {
     for (var provider in providers) {
       List<VideoData> response = await provider.scrape(
         imdbId: imdbId,
+        tmdbId: tmdbId,
         mediaType: mediaType,
         title: title,
         year: year,

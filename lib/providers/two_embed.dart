@@ -29,7 +29,7 @@ class TwoEmbed {
         return streamId;
       }
     } else {
-      print("Error fetching stream ID: ${response.statusCode}");
+      return null;
     }
     return null;
   }
@@ -75,7 +75,6 @@ class TwoEmbed {
         final c = pack['c'];
         final k = List<String>.from(pack['k']);
         final deobfuscated = jsObfuscationReplacer(p, a, c, k);
-        print("Deobfuscated: $deobfuscated");
         final streamUrl = jsonDecode(deobfuscated
             .split("var links=")[1]
             .split(";jwplayer")[0]
@@ -138,7 +137,7 @@ class TwoEmbed {
             ),
           );
         } else {
-          print("No video source found.");
+          return videoDataList;
         }
       }
     } catch (e) {

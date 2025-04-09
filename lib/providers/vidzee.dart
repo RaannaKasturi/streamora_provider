@@ -26,8 +26,6 @@ class Vidzee {
       final data = response.data.toString();
       List<dynamic> servers = jsonDecode(
           "${data.split("data-stream-sources='")[1].split("]'")[0]}]");
-      print("Servers: $servers");
-
       for (var server in servers) {
         var videoLabel = server['label'];
         var videoUrl = server['url'];

@@ -47,8 +47,6 @@ class Embed {
     try {
       final url =
           "$baseUrl/embed/${mediaType == 'movie' ? 'movie' : 'tv'}/$tmdbId${mediaType == 'tv' ? '/$season/$episode' : ''}";
-      print("Requesting: $url");
-
       Response response = await dio.get(
         url,
         options: Options(
@@ -67,7 +65,6 @@ class Embed {
             .map((item) => String.fromCharCodes(item.codeUnits.reversed))
             .toList();
       } catch (e) {
-        print("Failed to decode first layer: ${e.toString()}");
         return videoDataList;
       }
 
@@ -78,11 +75,9 @@ class Embed {
             String.fromCharCodes(joinedReversed.codeUnits.reversed);
         secondDecode = jsonDecode(await stringAtob(reversedString));
       } catch (e) {
-        print("Failed to decode second layer: ${e.toString()}");
         return videoDataList;
       }
       if (secondDecode.isEmpty) {
-        print("No valid sources found after decoding.");
         return videoDataList;
       }
       for (var items in secondDecode) {
@@ -102,7 +97,7 @@ class Embed {
             ),
           );
         } else {
-          print("No stream URL found for hash: ${items['hash']}");
+          continue;
         }
       }
     } catch (e) {
