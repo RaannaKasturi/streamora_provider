@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
 import 'package:streamora_provider/data/video_data.dart';
@@ -73,10 +75,29 @@ class TwoEmbed {
         final c = pack['c'];
         final k = List<String>.from(pack['k']);
         final deobfuscated = jsObfuscationReplacer(p, a, c, k);
-
-        final match = RegExp(r'\[{file:"(.*?)"\}\]').firstMatch(deobfuscated);
-        if (match != null) {
-          return match.group(1);
+        print("Deobfuscated: $deobfuscated");
+        final streamUrl = jsonDecode(deobfuscated
+            .split("var links=")[1]
+            .split(";jwplayer")[0]
+            .trim()
+            .toString());
+        for (var entry in streamUrl.entries) {
+          final value = entry.value;
+          if (value is List) {
+            for (var item in value) {
+              if (item.toString().startsWith("http")) {
+                final videoUrl = item.toString();
+                if (videoUrl.isNotEmpty) {
+                  return videoUrl;
+                }
+              }
+            }
+          } else if (value.toString().startsWith("http")) {
+            final videoUrl = value.toString();
+            if (videoUrl.isNotEmpty) {
+              return videoUrl;
+            }
+          }
         }
       }
     }
@@ -85,6 +106,7 @@ class TwoEmbed {
 
   Future<List<VideoData>> scrape({
     required String imdbId,
+    required String tmdbId,
     required String mediaType,
     required String title,
     required String year,
@@ -92,7 +114,7 @@ class TwoEmbed {
     int? episode,
   }) async {
     try {
-      final streamId = await getStreamId(imdbId, mediaType, title, year,
+      final streamId = await getStreamId(tmdbId, mediaType, title, year,
           season: season, episode: episode);
       if (streamId != null) {
         final url = "$baseUrl$streamId";

@@ -17,6 +17,7 @@ class AutoEmbed2 {
 
   Future<List<VideoData>> scrape({
     required String imdbId,
+    required String tmdbId,
     required String mediaType,
     required String title,
     required String year,
@@ -24,10 +25,8 @@ class AutoEmbed2 {
     int? episode,
   }) async {
     try {
-      String finalUrl = "$baseUrl?type=$mediaType&id=$imdbId";
-      if (mediaType == "tv" && season != null && episode != null) {
-        finalUrl += "/$season/$episode";
-      }
+      String finalUrl =
+          "$baseUrl?type=$mediaType&id=$imdbId${mediaType == "tv" ? "/$season/$episode" : ""}";
       final encodedResponse = await dio.get(finalUrl);
       final encodedData = encodedResponse.data;
       final decryptedResponse = await dio.post(
@@ -58,7 +57,6 @@ class AutoEmbed2 {
     } catch (e) {
       print("Error: $e");
     }
-
     return videoDataList;
   }
 }
