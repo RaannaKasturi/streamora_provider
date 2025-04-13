@@ -6,8 +6,8 @@ import 'package:streamora_provider/utils/is_accessible.dart';
 class Embed {
   final headers = {
     "Referer": "https://embed.su",
-    "Origin": "https://embed.su",
-    "Host": "embed.su",
+    // "Origin": "https://embed.su",
+    // "Host": "embed.su",
   };
   final String baseUrl = "https://embed.su";
   final Dio dio = Dio();
@@ -92,13 +92,30 @@ class Embed {
         final streamURL = response.data['source'];
         print("\n\n\nVideo Source: EMBED");
         if (await isAccessible(url: streamURL, headers: headers)) {
-          videoDataList.add(
-            VideoData(
-              videoSource: "EMBED_${videoDataList.length + 1}",
-              videoSourceUrl: streamURL,
-              videoSourceHeaders: headers,
+          Response resposne = await dio.get(
+            streamURL,
+            options: Options(
+              headers: headers,
+              followRedirects: true,
             ),
           );
+          final regex = RegExp(r'RESOLUTION=(\d+x\d).*?\r?\n(\/.*?\.png)');
+          final matches = regex.allMatches(resposne.data.toString()).toList();
+          final resolutions = RegExp(r'(\d{3,4}x\d{3,4})')
+              .allMatches(resposne.data.toString())
+              .map((m) => m.group(0) ?? '')
+              .toList();
+          final links = matches.map((m) => m.group(2) ?? '').toList();
+          for (var i = 0; i < links.length; i++) {
+            videoDataList.add(
+              VideoData(
+                videoSource:
+                    "EMBED_${videoDataList.length + 1} (${resolutions[i]})",
+                videoSourceUrl:
+                    "https://m3u8-3.wafflehacker.io/proxy?url=${Uri.encodeComponent(baseUrl + links[i])}&headers=${Uri.encodeComponent(jsonEncode(headers))}",
+              ),
+            );
+          }
         } else {
           continue;
         }
