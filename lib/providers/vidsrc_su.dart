@@ -36,10 +36,17 @@ class VidsrcSu {
         .split("const fixedServers = ")[1]
         .split("];")[0]);
     for (var server in servers) {
+      if (server.contains("proxy-m3u8.uira.live")) {
+        server = Uri.decodeFull(server.split("?url=")[1].split("&amp;")[0]);
+      }
       videoDataList.add(
         VideoData(
           videoSource: "VIDSRC_${videoDataList.length + 1}",
           videoSourceUrl: server,
+          videoSourceHeaders: {
+            'Referer': "https://vidsrc.su/",
+            "Origin": "https://vidsrc.su",
+          },
         ),
       );
     }

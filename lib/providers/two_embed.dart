@@ -28,12 +28,9 @@ class TwoEmbed {
     if (response.statusCode == 200) {
       final soup = BeautifulSoup(response.data);
       final iframe = soup.find('iframe');
-      print("Iframe: $iframe");
       final dataSrc = iframe?.attributes['data-src'];
       if (dataSrc != null) {
-        print("Data Source: $dataSrc");
         final streamId = dataSrc.split("?id=")[1].split("&")[0];
-        print("Stream ID: $streamId");
         return streamId;
       }
     } else {

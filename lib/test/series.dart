@@ -39,5 +39,6 @@ void main() async {
   for (var videoData in videoDataList) {
     print("\n\n\nVideo Source: ${videoData.videoSource}");
     print("Video Source URL: ${videoData.videoSourceUrl}");
+    print("Video Source Headers: ${videoData.videoSourceHeaders}");
   }
 }

@@ -23,6 +23,7 @@ class StreamoraProvider {
   }) async {
     List<VideoData> videoDataList = [];
     for (var provider in providers) {
+      print('Scraping with provider: ${provider.runtimeType}');
       List<VideoData> response = await provider.scrape(
         imdbId: imdbId,
         tmdbId: tmdbId,
