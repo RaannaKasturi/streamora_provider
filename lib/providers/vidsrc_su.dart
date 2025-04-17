@@ -27,7 +27,6 @@ class VidsrcSu {
     final Dio dio = Dio();
     final path =
         "$baseUrl/${mediaType == "movie" ? "movie/$tmdbId" : "tv/$tmdbId/$season/$episode"}";
-    print("Path: $path");
     Response response = await dio.get(path, options: Options(headers: headers));
     if (response.statusCode != 200) {
       return videoDataList;

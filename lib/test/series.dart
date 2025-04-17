@@ -1,31 +1,26 @@
 import 'package:streamora_provider/data/video_data.dart';
-import 'package:streamora_provider/providers/auto_embed_1.dart';
-import 'package:streamora_provider/providers/auto_embed_2.dart';
-import 'package:streamora_provider/providers/embed.dart';
 import 'package:streamora_provider/providers/two_embed.dart';
 import 'package:streamora_provider/providers/vidsrc_su.dart';
 import 'package:streamora_provider/providers/vidzee.dart';
 
 final List providers = [
-  AutoEmbed1(),
-  AutoEmbed2(),
   TwoEmbed(),
-  Embed(),
   VidsrcSu(),
   Vidzee(),
 ];
 
 void main() async {
-  final imdbID = "tt15571732";
-  final tmdbID = "138501";
+  final imdbID = "tt7235466";
+  final tmdbID = "75219";
   final mediaType = "tv";
-  final title = "Agatha All Along";
-  final year = "2024";
-  final season = 1;
-  final episode = 1;
+  final title = "911";
+  final year = "2018";
+  final season = 8;
+  final episode = 11;
   List<VideoData> videoDataList = [];
 
   for (var provider in providers) {
+    print("Provider: ${provider.runtimeType}");
     try {
       List<VideoData> response = await provider.scrape(
         imdbId: imdbID,

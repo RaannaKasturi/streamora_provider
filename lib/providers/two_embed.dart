@@ -10,7 +10,7 @@ class TwoEmbed {
   final List<VideoData> videoDataList = [];
   final String baseUrl = "https://uqloads.xyz/e/";
   final headers = {
-    'Host': 'uqloads.xyz',
+    'Origin': 'uqloads.xyz',
     'Referer': 'https://streamsrcs.2embed.cc/',
   };
 
@@ -28,9 +28,12 @@ class TwoEmbed {
     if (response.statusCode == 200) {
       final soup = BeautifulSoup(response.data);
       final iframe = soup.find('iframe');
+      print("Iframe: $iframe");
       final dataSrc = iframe?.attributes['data-src'];
       if (dataSrc != null) {
+        print("Data Source: $dataSrc");
         final streamId = dataSrc.split("?id=")[1].split("&")[0];
+        print("Stream ID: $streamId");
         return streamId;
       }
     } else {
@@ -132,13 +135,12 @@ class TwoEmbed {
         final source = extractVideoSource(response.data);
         print("\n\n\nVideo Source: 2EMBED");
         if (source != null &&
-            await isAccessible(url: source, headers: headers) &&
+            await isAccessible(url: source) &&
             !videoDataList.any((element) => element.videoSourceUrl == source)) {
           videoDataList.add(
             VideoData(
               videoSource: "2EMBED_${videoDataList.length + 1}",
               videoSourceUrl: source,
-              videoSourceHeaders: headers,
             ),
           );
         } else {
@@ -151,4 +153,26 @@ class TwoEmbed {
 
     return videoDataList;
   }
+}
+
+void main() async {
+  final imdbID = "tt14513804";
+  final tmdbID = "822119";
+  final mediaType = "movie";
+  final title = "Captain America: Brave New World";
+  final year = "2025";
+  final season = null;
+  final episode = null;
+
+  TwoEmbed twoEmbed = TwoEmbed();
+  final data = twoEmbed.scrape(
+    imdbId: imdbID,
+    tmdbId: tmdbID,
+    mediaType: mediaType,
+    title: title,
+    year: year,
+    season: season,
+    episode: episode,
+  );
+  print("Stream ID: $data");
 }

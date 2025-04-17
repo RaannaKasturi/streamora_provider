@@ -2,14 +2,12 @@ import 'package:dio/dio.dart';
 
 Future<bool> isAccessible({
   required String url,
-  Map<String, dynamic>? headers,
 }) async {
   print("Checking URL: $url");
   if (url.isEmpty) return false;
   try {
-    final response = await Dio()
-        .get(url, options: Options(headers: headers, followRedirects: true))
-        .timeout(
+    final response =
+        await Dio().get(url, options: Options(followRedirects: true)).timeout(
       const Duration(seconds: 5),
       onTimeout: () {
         print("Request timed out for URL: $url");
